@@ -1,5 +1,5 @@
 #include <string>
-#include "NIDAQWrapper.h"
+//#include "NIDAQWrapper.h"
 #include "GUIButton.h"
 #include "GUITrack.h"
 #include "Strategy.h"
@@ -29,24 +29,34 @@ namespace SLDP
 		setLabel(track->getMode() ? "Modify Mode" : "Run Mode");
 	}
 
-	ReadButton::ReadButton(long x, long y, long width, long height, GUITrack* track, NIDAQWrapper* wrapper)
-		: GUIButton(x, y, width, height, "Read From DAQ", track), wrapper(wrapper) {}
+	StrategyButton::StrategyButton(long x, long y, long width, long height, bool* dijkstra)
+		: GUIButton(x, y, width, height, "General", NULL), dijkstra(dijkstra) {}
+
+
+	void StrategyButton::onClick()
+	{
+		*dijkstra = !*dijkstra;
+		setLabel(*dijkstra ? "General" : "Naive");
+	}
+
+	ReadButton::ReadButton(long x, long y, long width, long height, GUITrack* track)//, NIDAQWrapper* wrapper)
+		: GUIButton(x, y, width, height, "Read From DAQ", track){}//, wrapper(wrapper) {}
 
 	void ReadButton::onClick()
 	{
-		wrapper->GetPhysical(track);
+	//	wrapper->GetPhysical(track);
 	}
 
-	WriteButton::WriteButton(long x, long y, long width, long height, GUITrack* track, NIDAQWrapper* wrapper)
-		: GUIButton(x, y, width, height, "Write To DAQ", track), wrapper(wrapper) {}
+	WriteButton::WriteButton(long x, long y, long width, long height, GUITrack* track)//, NIDAQWrapper* wrapper)
+		: GUIButton(x, y, width, height, "Write To DAQ", track){}//, wrapper(wrapper) {}
 
 	void WriteButton::onClick()
 	{
-		wrapper->MeHearYourBodyTalk(track);
+	//	wrapper->MeHearYourBodyTalk(track);
 	}
 
 	SaveButton::SaveButton(long x, long y, long width, long height, GUITrack* track)
-		: GUIButton(x, y, width, height, "Save To File", track) {}
+		: GUIButton(x, y, width, height, "Save Track", track) {}
 
 	void SaveButton::onClick()
 	{
@@ -54,7 +64,7 @@ namespace SLDP
 	}
 
 	LoadButton::LoadButton(long x, long y, long width, long height, GUITrack* track)
-		: GUIButton(x, y, width, height, "Load From File", track) {}
+		: GUIButton(x, y, width, height, "Load Track", track) {}
 
 	void LoadButton::onClick()
 	{
@@ -70,8 +80,8 @@ namespace SLDP
 		setLabel((*currentMode == NORMAL) ? "Normal Mode" : "Reverse Mode");
 	}
 
-	TrainStartButton::TrainStartButton(long x, long y, long width, long height, GUITrack* track, TrainMode* mode, GUINode* start)
-		: GUIButton(x, y, width, height, "Run From " + start->getLabel(), NULL), track(track), mode(mode), start(start) {}
+	TrainStartButton::TrainStartButton(long x, long y, long width, long height, GUITrack* track, TrainMode* mode, bool* dijkstra, GUINode* start)
+		: GUIButton(x, y, width, height, "Run From " + start->getLabel(), NULL), track(track), mode(mode), dijkstra(dijkstra), start(start) {}
 
 	void TrainStartButton::onClick()
 	{
@@ -143,8 +153,12 @@ namespace SLDP
 				ends.push_back("L3");
 			}
 		}
-		DijkstraStrategy strat(start->getLabel(), ends);
-		track->setNopath((strat.Execute(&runTrack) == NOPATH));
+		Strategy* strat;
+		if (*dijkstra)
+			strat = new DijkstraStrategy(start->getLabel(), ends);
+		else
+			strat = new NaiveStrategy(*mode, start->getLabel());
+		track->setNopath((strat->Execute(&runTrack) == NOPATH));
 		track->readFromTrack(runTrack);
 	}
 

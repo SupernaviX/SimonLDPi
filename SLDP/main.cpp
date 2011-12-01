@@ -1,6 +1,6 @@
 #include <vector>
 //#include "Redirect.h"
-#include "NIDAQWrapper.h"
+//#include "NIDAQWrapper.h"
 #include <cstdio>
 #include "Win32++\wincore.h"
 #include "GUIBase.h"
@@ -17,25 +17,26 @@ class CView : public CWnd
 {
 public:
 	CView() :
-	  objectToLabel(NULL)
+	  objectToLabel(NULL), mode(NORMAL), dijkstra(true)
 	{
 		track.loadFromFile("input.xml");
 		track.saveToFile("junk.xml");
-		wrapper = new NIDAQWrapper();
-		wrapper->Initialize();
-		mode = NORMAL;
-		buttons.push_back(new ModeButton(340, 455, 125, 50, &track));
+//		wrapper = new NIDAQWrapper();
+//		wrapper->Initialize();
+		buttons.push_back(new StrategyButton(340, 455, 125, 50, &dijkstra));
+//		buttons.push_back(new StrategyButton(790, 480, 125, 50, &dijkstra));
 		buttons.push_back(new TrainModeButton(340, 504, 125, 50, &mode));
-		buttons.push_back(new ReadButton(490, 455, 125, 50, &track, wrapper));
-		buttons.push_back(new WriteButton(490, 504, 125, 50, &track, wrapper));
+		buttons.push_back(new ReadButton(490, 455, 125, 50, &track));//, wrapper));
+		buttons.push_back(new WriteButton(490, 504, 125, 50, &track));//, wrapper));
 		buttons.push_back(new SaveButton(640, 455, 125, 50, &track));
 		buttons.push_back(new LoadButton(640, 504, 125, 50, &track));
-		buttons.push_back(new TrainStartButton(25, 175, 125, 50, &track, &mode, track.getFirstNode("L1")));
-		buttons.push_back(new TrainStartButton(25, 300, 125, 50, &track, &mode, track.getFirstNode("L2")));
-		buttons.push_back(new TrainStartButton(25, 450, 125, 50, &track, &mode, track.getFirstNode("L3")));
-		buttons.push_back(new TrainStartButton(975, 100, 125, 50, &track, &mode, track.getFirstNode("R1")));
-		buttons.push_back(new TrainStartButton(975, 300, 125, 50, &track, &mode, track.getFirstNode("R2")));
-		buttons.push_back(new TrainStartButton(975, 450, 125, 50, &track, &mode, track.getFirstNode("R3")));
+		buttons.push_back(new ModeButton(790, 480, 125, 50, &track));
+		buttons.push_back(new TrainStartButton(25, 175, 125, 50, &track, &mode, &dijkstra, track.getFirstNode("L1")));
+		buttons.push_back(new TrainStartButton(25, 300, 125, 50, &track, &mode, &dijkstra, track.getFirstNode("L2")));
+		buttons.push_back(new TrainStartButton(25, 450, 125, 50, &track, &mode, &dijkstra, track.getFirstNode("L3")));
+		buttons.push_back(new TrainStartButton(975, 100, 125, 50, &track, &mode, &dijkstra, track.getFirstNode("R1")));
+		buttons.push_back(new TrainStartButton(975, 300, 125, 50, &track, &mode, &dijkstra, track.getFirstNode("R2")));
+		buttons.push_back(new TrainStartButton(975, 450, 125, 50, &track, &mode, &dijkstra, track.getFirstNode("R3")));
 	}
 	virtual ~CView() {}
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -53,12 +54,13 @@ public:
 
 
 private:
-	NIDAQWrapper* wrapper;
+//	NIDAQWrapper* wrapper;
 	GUITrack track;
 	POINT lastMouseClick;
 	POINT lastMousePos;
 	GUIBase* objectToLabel;
 	TrainMode mode;
+	bool dijkstra;
 	vector<GUIButton*> buttons;
 };
 

@@ -12,6 +12,7 @@ namespace SLDP
 
 	class Strategy
 	{
+	public:
 		virtual Result Execute(Track* track) = 0;
 	};
 }

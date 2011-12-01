@@ -7,7 +7,7 @@
 namespace SLDP
 {
 	class GUITrack;
-	class NIDAQWrapper;
+//	class NIDAQWrapper;
 	class GUIButton : public GUIBase
 	{
 	public:
@@ -25,22 +25,31 @@ namespace SLDP
 		void onClick();
 	};
 
+	class StrategyButton : public GUIButton
+	{
+	public:
+		StrategyButton(long x, long y, long width, long height, bool* dijkstra);
+		void onClick();
+	private:
+		bool* dijkstra;
+	};
+
 	class ReadButton : public GUIButton
 	{
 	public:
-		ReadButton(long x, long y, long width, long height, GUITrack* track, NIDAQWrapper* wrapper);
+		ReadButton(long x, long y, long width, long height, GUITrack* track);//, NIDAQWrapper* wrapper);
 		void onClick();
 	private:
-		NIDAQWrapper* wrapper;
+//		NIDAQWrapper* wrapper;
 	};
 
 	class WriteButton : public GUIButton
 	{
 	public:
-		WriteButton(long x, long y, long width, long height, GUITrack* track, NIDAQWrapper* wrapper);
+		WriteButton(long x, long y, long width, long height, GUITrack* track);//, NIDAQWrapper* wrapper);
 		void onClick();
 	private:
-		NIDAQWrapper* wrapper;
+//		NIDAQWrapper* wrapper;
 	};
 
 	class SaveButton : public GUIButton
@@ -69,11 +78,12 @@ namespace SLDP
 	class TrainStartButton : public GUIButton
 	{
 	public:
-		TrainStartButton(long x, long y, long width, long height, GUITrack* track, TrainMode* mode, GUINode* start);
+		TrainStartButton(long x, long y, long width, long height, GUITrack* track, TrainMode* mode, bool* dijkstra, GUINode* start);
 		void onClick();
 	private:
 		GUITrack* track;
 		TrainMode* mode;
+		bool* dijkstra;
 		GUINode* start;
 	};
 }

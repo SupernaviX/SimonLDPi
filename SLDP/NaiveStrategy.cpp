@@ -24,7 +24,6 @@ namespace SLDP
 	Result NaiveStrategy::Execute(Track* track)
 	{
 		const string obstacleLabels[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"};
-		//const string obstacleLabels[] = {"L1A", "AB", "BC", "CD", "DR1", "CF", "FG", "GD", "AJ", "IB", "FN", "MG", "L2I", "IJ", "JK", "KL", "LM", "MN", "NO", "OP", "PR2", "KS", "QL", "OW", "VX", "L3Q", "QR", "RS", "SU", "UV", "VW", "WR3", "RU"};
 
 		map<string, bool> obstacles;
 
